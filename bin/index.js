@@ -24,6 +24,8 @@ function runCommand(command) {
 
 if (options.c) {
   runCommand(options.c);
+} else if (options.hello) {
+  console.log(chalk.green('Hello, world!'));
 } else {
-    console.log(chalk.red("Both sentence and language must be specified."));
+  console.log(chalk.red('Goodbye, world!'));
 }

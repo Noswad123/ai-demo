@@ -19,7 +19,6 @@ const options = yargs(hideBin(process.argv))
 
 function runCommand(command) {
   console.log(chalk.blue("Running command: ", command));
-
 }
 
 if (options.c) {

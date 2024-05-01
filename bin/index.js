@@ -1,30 +1,51 @@
 #!/usr/bin/env node
 
+import { exec } from 'child_process';
 import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
 import chalk from 'chalk';
 
-const usage = chalk.green("\nUsage: ai-demo -c <command>");
+const usage = chalk.green("\nUsage: ai-demo -c <command> [args]");
 
-const options = yargs(hideBin(process.argv))
-  .usage(usage)
-  .option("c", {
-    alias: "command",
-    describe: "Command to run",
-    type: "string",
-    demandOption: false
+const options = yargs(process.argv.slice(2))
+  .usage('$0 <cmd> [args]')
+  .option('hello', {
+    boolean: true,
+    default: false,
+    describe: 'Say hello world'
   })
-  .help(true)
+  .option('c', {
+    alias: 'c',
+    describe: 'Command to run',
+    type: 'string'
+  })
+  .option('t', {
+    alias: 't',
+    describe: 'Display the current time',
+    type: 'boolean'
+  })
+  .help()
   .argv;
 
 function runCommand(command) {
-  console.log(chalk.blue("Running command: ", command));
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(stdout);
+  });
 }
 
-if (options.c) {
+if (options.hello) {
+  console.log(chalk.green('Hello'));
+} else if (options.c) {
   runCommand(options.c);
-} else if (options.hello) {
-  console.log(chalk.green('Hello, world!'));
+} else if (options.t) {
+  console.log(new Date().toLocaleTimeString());
 } else {
-  console.log(chalk.red('Goodbye, world!'));
+  console.log(chalk.red('Goodbye'));
 }
